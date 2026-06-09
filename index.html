@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Garagem Comunicação Visual — Sistema de Gestão</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600;1,700;1,800&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --yellow:#F5C800;
+  --yellow-dim:#9c8200;
+  --bg:#0C0C0C;
+  --surface:#141414;
+  --surface-2:#191919;
+  --sidebar:#080808;
+  --input:#1C1C1C;
+  --line:#262624;
+  --line-soft:#1d1d1b;
+  --text:#F0EFE8;
+  --muted:#888880;
+  --muted-2:#5d5d57;
+  --success:#7EC850;
+  --danger:#FF4040;
+  --info:#5BA8E0;
+  --radius:6px;
+  --radius-lg:10px;
+  --sidebar-w:220px;
+  --head:'Barlow Condensed',system-ui,sans-serif;
+  --body:'Barlow',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--body);
+  font-size:14px;
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+#root{height:100vh}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#262624;border-radius:6px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:#34342f}
+::selection{background:var(--yellow);color:#000}
+
+/* ---- dot grid motif ---- */
+.dotgrid{
+  background-image:radial-gradient(rgba(240,239,232,0.035) 1px, transparent 1.4px);
+  background-size:22px 22px;
+  background-position:-1px -1px;
+}
+
+/* ---- type helpers ---- */
+.cond{font-family:var(--head)}
+.eyebrow{
+  font-family:var(--head);
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  font-weight:600;
+  font-size:11px;
+  color:var(--muted);
+}
+h1,h2,h3{font-family:var(--head);font-weight:700;line-height:1.04;letter-spacing:.01em}
+.italic{font-style:italic}
+
+/* ---- focus ---- */
+input,select,button,textarea{font-family:inherit;color:inherit}
+input:focus,select:focus,textarea:focus{outline:none}
+
+/* ---- buttons ---- */
+.btn{
+  font-family:var(--head);
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  font-weight:700;
+  font-size:13px;
+  padding:0 16px;
+  height:38px;
+  display:inline-flex;align-items:center;gap:8px;justify-content:center;
+  border:1px solid transparent;
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:transform .08s ease, background .15s ease, border-color .15s ease, color .15s ease;
+  white-space:nowrap;
+  user-select:none;
+}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--yellow);color:#0A0A0A;}
+.btn-primary:hover{background:#ffd521;box-shadow:0 0 0 3px rgba(245,200,0,.18)}
+.btn-ghost{background:transparent;color:var(--text);border-color:var(--line)}
+.btn-ghost:hover{border-color:#3a3a36;background:#161614}
+.btn-success{background:transparent;color:var(--success);border-color:rgba(126,200,80,.4)}
+.btn-success:hover{background:rgba(126,200,80,.1);border-color:var(--success)}
+.btn-danger-ghost{background:transparent;color:var(--danger);border-color:rgba(255,64,64,.35)}
+.btn-danger-ghost:hover{background:rgba(255,64,64,.1)}
+.btn-sm{height:30px;font-size:11px;padding:0 11px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---- badges (square / rounded-rect, never pill) ---- */
+.badge{
+  font-family:var(--head);
+  text-transform:uppercase;
+  letter-spacing:.07em;
+  font-weight:700;
+  font-size:10.5px;
+  line-height:1;
+  padding:5px 8px 4px;
+  border-radius:4px;
+  display:inline-flex;align-items:center;gap:5px;
+  border:1px solid transparent;
+  white-space:nowrap;
+}
+.badge .dot{width:6px;height:6px;border-radius:1px}
+.badge-yellow{background:rgba(245,200,0,.14);color:var(--yellow);border-color:rgba(245,200,0,.28)}
+.badge-yellow-dim{background:rgba(245,200,0,.07);color:#b8a23a;border-color:rgba(245,200,0,.16)}
+.badge-green{background:rgba(126,200,80,.13);color:var(--success);border-color:rgba(126,200,80,.28)}
+.badge-blue{background:rgba(91,168,224,.13);color:var(--info);border-color:rgba(91,168,224,.28)}
+.badge-red{background:rgba(255,64,64,.12);color:#ff6a6a;border-color:rgba(255,64,64,.28)}
+.badge-gray{background:rgba(136,136,128,.12);color:var(--muted);border-color:rgba(136,136,128,.22)}
+
+/* ---- surfaces ---- */
+.card{
+  background:var(--surface);
+  border:1px solid var(--line-soft);
+  border-radius:var(--radius-lg);
+}
+.accent-l{border-left:3px solid var(--yellow)}
+
+/* ---- inputs ---- */
+.field-label{
+  font-family:var(--head);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  font-weight:600;
+  font-size:11px;
+  color:var(--muted);
+  margin-bottom:7px;
+  display:block;
+}
+.input{
+  width:100%;
+  background:var(--input);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  height:42px;
+  padding:0 13px;
+  color:var(--text);
+  font-size:14px;
+  font-family:var(--body);
+  transition:border-color .15s, box-shadow .15s;
+}
+textarea.input{height:auto;padding:11px 13px;resize:vertical;line-height:1.5}
+.input::placeholder{color:var(--muted-2)}
+.input:focus{border-color:var(--yellow);box-shadow:0 0 0 3px rgba(245,200,0,.16)}
+.input.is-error{border-color:var(--danger)}
+select.input{appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888880' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;padding-right:34px;}
+
+/* ---- tables ---- */
+.tbl{width:100%;border-collapse:collapse}
+.tbl thead th{
+  font-family:var(--head);
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  font-weight:600;
+  font-size:11px;
+  color:var(--muted);
+  text-align:left;
+  padding:13px 16px;
+  border-bottom:1px solid var(--line);
+  white-space:nowrap;
+}
+.tbl tbody td{
+  padding:14px 16px;
+  border-bottom:1px solid var(--line-soft);
+  vertical-align:middle;
+}
+.tbl tbody tr{transition:background .12s}
+.tbl tbody tr:hover{background:#161614}
+.tbl tbody tr.is-selected{background:rgba(245,200,0,.06)}
+.tbl tbody tr.is-selected td:first-child{box-shadow:inset 3px 0 0 var(--yellow)}
+.tbl tbody tr:last-child td{border-bottom:none}
+.num{font-family:var(--head);font-weight:600;font-variant-numeric:tabular-nums}
+.yellow{color:var(--yellow)}
+.muted{color:var(--muted)}
+
+/* scrollbars in modal */
+.modal-scroll{overflow-y:auto}
+
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes slidein{from{transform:translateX(10px)}to{transform:none}}
+.fadein{animation:fadein .2s ease}
+.screen-enter{animation:slidein .26s cubic-bezier(.2,.7,.2,1)}
+@media (prefers-reduced-motion: reduce){.screen-enter,.fadein{animation:none}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="app/data.jsx"></script>
+<script type="text/babel" src="app/ui.jsx"></script>
+<script type="text/babel" src="app/sidebar.jsx"></script>
+<script type="text/babel" src="app/dashboard.jsx"></script>
+<script type="text/babel" src="app/produtos.jsx"></script>
+<script type="text/babel" src="app/clientes.jsx"></script>
+<script type="text/babel" src="app/pedidos.jsx"></script>
+<script type="text/babel" src="app/orcamentos.jsx"></script>
+<script type="text/babel" src="app/ordens.jsx"></script>
+<script type="text/babel" src="app/componentes.jsx"></script>
+<script type="text/babel" src="app/modals.jsx"></script>
+<script type="text/babel" src="app/main.jsx"></script>
+</body>
+</html>

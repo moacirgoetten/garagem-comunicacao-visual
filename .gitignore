@@ -1,0 +1,17 @@
+# banco de dados pickle (gerado automaticamente ao rodar)
+backend/garagem.pkl
+
+# cache Python
+__pycache__/
+*.py[cod]
+
+# ambientes virtuais
+venv/
+.venv/
+env/
+
+# VS Code
+.vscode/
+
+# Claude Code (configurações locais)
+.claude/
