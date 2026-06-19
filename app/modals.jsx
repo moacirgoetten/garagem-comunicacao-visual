@@ -130,14 +130,39 @@ function ClienteForm({ onClose }) {
 // ---------- Pedido form ----------
 function PedidoForm({ onClose }) {
   const app = useApp();
+  const semClientes  = app.clientes.length === 0;
+  const semProdutos  = app.produtos.length === 0;
+
   const [clienteId, setClienteId] = useState(app.clientes[0] ? app.clientes[0].id : "");
   const [prazo, setPrazo] = useState(addDays(todayISO(), 7));
   const [itens, setItens] = useState([{ produtoId: app.produtos[0] ? app.produtos[0].id : "", qtd: 1 }]);
   const [err, setErr] = useState({});
 
   const setItem = (i, k, v) => setItens((arr) => arr.map((it, idx) => (idx === i ? { ...it, [k]: v } : it)));
-  const addItem = () => setItens((arr) => [...arr, { produtoId: app.produtos[0].id, qtd: 1 }]);
+  const addItem = () => { if (app.produtos[0]) setItens((arr) => [...arr, { produtoId: app.produtos[0].id, qtd: 1 }]); };
   const rmItem = (i) => setItens((arr) => arr.filter((_, idx) => idx !== i));
+
+  if (semClientes || semProdutos) {
+    return (
+      <ModalShell title="Novo Pedido" eyebrow="Registro · pedidos" onClose={onClose}
+        footer={<Btn variant="ghost" onClick={onClose}>Fechar</Btn>}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: "8px 0" }}>
+          {semClientes && (
+            <div style={{ background: "rgba(255,64,64,.08)", border: "1px solid rgba(255,64,64,.3)", borderRadius: 8, padding: "14px 16px" }}>
+              <div style={{ color: "var(--danger)", fontWeight: 700, marginBottom: 4 }}>Nenhum cliente cadastrado</div>
+              <div style={{ color: "var(--muted)", fontSize: 13 }}>Cadastre ao menos um cliente na seção <strong style={{color:"var(--fg)"}}>Clientes</strong> antes de criar um pedido.</div>
+            </div>
+          )}
+          {semProdutos && (
+            <div style={{ background: "rgba(255,64,64,.08)", border: "1px solid rgba(255,64,64,.3)", borderRadius: 8, padding: "14px 16px" }}>
+              <div style={{ color: "var(--danger)", fontWeight: 700, marginBottom: 4 }}>Nenhum produto cadastrado</div>
+              <div style={{ color: "var(--muted)", fontSize: 13 }}>Cadastre ao menos um produto na seção <strong style={{color:"var(--fg)"}}>Produtos</strong> antes de criar um pedido.</div>
+            </div>
+          )}
+        </div>
+      </ModalShell>
+    );
+  }
 
   const total = itens.reduce((s, it) => {
     const p = app.produtoById(it.produtoId);
