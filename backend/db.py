@@ -1,13 +1,15 @@
 import os
 import ssl
+import platform
 
-_orig_ssl_ctx = ssl.create_default_context
-def _no_verify_ssl(*args, **kwargs):
-    ctx = _orig_ssl_ctx(*args, **kwargs)
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
-    return ctx
-ssl.create_default_context = _no_verify_ssl
+if platform.system() == 'Windows':
+    _orig_ssl_ctx = ssl.create_default_context
+    def _no_verify_ssl(*args, **kwargs):
+        ctx = _orig_ssl_ctx(*args, **kwargs)
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        return ctx
+    ssl.create_default_context = _no_verify_ssl
 
 from supabase import create_client
 from dotenv import load_dotenv
