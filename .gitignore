@@ -15,3 +15,7 @@ env/
 
 # Claude Code (configurações locais)
 .claude/
+
+# variáveis de ambiente (credenciais — nunca commitar)
+.env
+backend/.env
