@@ -32,6 +32,30 @@ def criar_pedido():
     return jsonify(pedido), 201
 
 
+@pedidos_bp.route('/api/pedidos/<pedido_id>', methods=['DELETE'])
+def excluir_pedido(pedido_id):
+    resultado = db.buscar_um('pedidos', 'id', pedido_id)
+    if not resultado:
+        return jsonify({'erro': 'Pedido não encontrado'}), 404
+
+    pedido = resultado[0]
+    status_bloqueados = ('aguardando', 'aprovado', 'producao')
+    if pedido['status'] in status_bloqueados:
+        return jsonify({'erro': f'Não é possível excluir um pedido com status "{pedido["status"]}"'}), 400
+
+    # Remove ordens e orçamentos vinculados antes de excluir o pedido
+    ordens = db.buscar_um('ordens', 'pedidoId', pedido_id)
+    for os in ordens:
+        db.excluir('ordens', os['id'])
+
+    orcamentos = db.buscar_um('orcamentos', 'pedidoId', pedido_id)
+    for orc in orcamentos:
+        db.excluir('orcamentos', orc['id'])
+
+    db.excluir('pedidos', pedido_id)
+    return jsonify({'ok': True}), 200
+
+
 @pedidos_bp.route('/api/pedidos/<pedido_id>/orcamento', methods=['POST'])
 def gerar_orcamento(pedido_id):
     dados = db.carregar()

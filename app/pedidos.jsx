@@ -21,6 +21,11 @@ function Pedidos({ openModal, onNavigate, focusOrcamento }) {
     setTimeout(() => onNavigate("orcamentos", { focus: orc.id }), 350);
   };
 
+  const handleDelete = async (p) => {
+    if (!window.confirm(`Excluir pedido ${p.id}? Esta ação não pode ser desfeita.`)) return;
+    await app.deletePedido(p.id);
+  };
+
   return (
     <div className="screen-enter">
       <PageHead eyebrow="Registro de pedidos" title="Pedidos">
@@ -56,10 +61,13 @@ function Pedidos({ openModal, onNavigate, focusOrcamento }) {
                   <td className="num" style={{ fontSize: 13 }}>{fmtDate(p.prazo)}</td>
                   <td><StatusBadge map={PEDIDO_STATUS} value={p.status} /></td>
                   <td style={{ textAlign: "right" }}>
-                    {p.status === "novo" && <Btn size="sm" variant="primary" onClick={() => handleGerar(p)}>Gerar Orç.</Btn>}
-                    {p.status === "aguardando" && hasOrc && <Btn size="sm" variant="ghost" onClick={() => onNavigate("orcamentos", { focus: hasOrc.id })}>Ver Orç.</Btn>}
-                    {(p.status === "aprovado" || p.status === "producao" || p.status === "concluido") && os && <Btn size="sm" variant="ghost" onClick={() => onNavigate("ordens")}>Ver OS</Btn>}
-                    {p.status === "recusado" && <span className="muted cond" style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: ".05em" }}>—</span>}
+                    <div style={{ display: "flex", gap: 6, justifyContent: "flex-end", alignItems: "center" }}>
+                      {p.status === "novo" && <Btn size="sm" variant="primary" onClick={() => handleGerar(p)}>Gerar Orç.</Btn>}
+                      {p.status === "aguardando" && hasOrc && <Btn size="sm" variant="ghost" onClick={() => onNavigate("orcamentos", { focus: hasOrc.id })}>Ver Orç.</Btn>}
+                      {(p.status === "aprovado" || p.status === "producao" || p.status === "concluido") && os && <Btn size="sm" variant="ghost" onClick={() => onNavigate("ordens")}>Ver OS</Btn>}
+                      {p.status === "recusado" && <span className="muted cond" style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: ".05em" }}>—</span>}
+                      {(p.status === "novo" || p.status === "recusado" || p.status === "concluido") && <Btn size="sm" variant="danger-ghost" onClick={() => handleDelete(p)} title="Excluir pedido">✕</Btn>}
+                    </div>
                   </td>
                 </tr>
               );

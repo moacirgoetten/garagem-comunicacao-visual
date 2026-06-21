@@ -39,6 +39,15 @@ def carregar():
     }
 
 
+def excluir(tabela, id_val):
+    _sb.table(tabela).delete().eq('id', id_val).execute()
+
+
+def buscar_um(tabela, campo, valor):
+    res = _sb.table(tabela).select('*').eq(campo, valor).execute()
+    return res.data
+
+
 def salvar(dados):
     for tabela in ('produtos', 'clientes', 'pedidos', 'orcamentos', 'ordens'):
         if dados.get(tabela):

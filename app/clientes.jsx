@@ -8,6 +8,13 @@ function Clientes({ openModal }) {
   const [tipo, setTipo] = useState("Todos");
   const [selected, setSelected] = useState(null);
 
+  const handleDelete = async (e, c) => {
+    e.stopPropagation();
+    if (!window.confirm(`Excluir cliente "${c.nome}"? Esta ação não pode ser desfeita.`)) return;
+    await app.deleteCliente(c.id);
+    setSelected(null);
+  };
+
   const filtered = app.clientes.filter((c) => {
     const okTipo = tipo === "Todos" || c.tipo === tipo;
     const okQ = !q || c.nome.toLowerCase().includes(q.toLowerCase()) || c.documento.includes(q);
@@ -30,7 +37,7 @@ function Clientes({ openModal }) {
       <Panel pad={false}>
         <table className="tbl">
           <thead>
-            <tr><th>Nome / Razão Social</th><th>Tipo</th><th>Documento</th><th>Telefone</th><th style={{ textAlign: "center" }}>Pedidos</th><th>Status</th></tr>
+            <tr><th>Nome / Razão Social</th><th>Tipo</th><th>Documento</th><th>Telefone</th><th style={{ textAlign: "center" }}>Pedidos</th><th>Status</th><th></th></tr>
           </thead>
           <tbody>
             {filtered.map((c) => (
@@ -41,6 +48,11 @@ function Clientes({ openModal }) {
                 <td className="num" style={{ fontSize: 13 }}>{c.telefone}</td>
                 <td style={{ textAlign: "center" }}><span className="cond" style={{ fontSize: 16, fontWeight: 700, fontStyle: "italic" }}>{app.numPedidosCliente(c.id)}</span></td>
                 <td><Badge tone={c.status === "Ativo" ? "green" : "gray"} dot>{c.status}</Badge></td>
+                <td style={{ textAlign: "right" }}>
+                  {app.numPedidosCliente(c.id) === 0 && (
+                    <Btn size="sm" variant="danger-ghost" onClick={(e) => handleDelete(e, c)} title="Excluir cliente">✕</Btn>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>

@@ -175,6 +175,28 @@ function useStore() {
     notify(`Orçamento ${orc.id} enviado`);
   }, [recarregar, notify]);
 
+  const deletePedido = useCallback(async (id) => {
+    const res = await fetch(`${API_URL}/pedidos/${id}`, { method: "DELETE" });
+    if (!res.ok) {
+      const err = await res.json();
+      notify(err.erro || "Erro ao excluir pedido", "warn");
+      return;
+    }
+    await recarregar();
+    notify(`Pedido ${id} excluído`, "warn");
+  }, [recarregar, notify]);
+
+  const deleteCliente = useCallback(async (id) => {
+    const res = await fetch(`${API_URL}/clientes/${id}`, { method: "DELETE" });
+    if (!res.ok) {
+      const err = await res.json();
+      notify(err.erro || "Erro ao excluir cliente", "warn");
+      return;
+    }
+    await recarregar();
+    notify("Cliente excluído", "warn");
+  }, [recarregar, notify]);
+
   // ---- OS: avançar produção ----
   const avancarOS = useCallback(async (os, delta) => {
     await fetch(`${API_URL}/ordens/${os.id}/avancar`, {
@@ -196,6 +218,7 @@ function useStore() {
     carregando,
     clienteById, produtoById, pedidoById, pedidoTotal, pedidoResumo, numPedidosCliente,
     addProduto, addCliente, addPedido,
+    deletePedido, deleteCliente,
     gerarOrcamento, aprovarOrcamento, recusarOrcamento, enviarOrcamento,
     avancarOS, entregarOS,
     CATEGORIAS, PEDIDO_STATUS, ORC_STATUS, OS_STATUS,
